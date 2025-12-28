@@ -25,7 +25,8 @@
 *.pem
 
 # local sqlite db
-/dev.db
+/**/dev.db
+prisma/dev.db
 
 # debug
 npm-debug.log*
