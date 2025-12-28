@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Page {
+  id          String   @id @default(cuid())
+  slug        String
+  category    String   // "industries", "use-cases", "platform"
+  title       String
+  description String
+  content     String?
+  iconName    String?
+  features    String   // Stored as JSON string
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([category, slug])
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      String   @default("USER") // "USER" or "ADMIN"
+  posts     Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  excerpt   String
+  content   String
+  coverImage String?
+  category  String   @default("General")
+  published Boolean  @default(false)
+  authorId  String?
+  author    User?    @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  department String?
+  subject   String?
+  message   String
+  status    String   @default("new") // new, read, replied
+  createdAt DateTime @default(now())
+}
+
+model JobApplication {
+  id          String   @id @default(cuid())
+  jobId       String
+  jobTitle    String
+  name        String
+  email       String
+  linkedin    String?
+  portfolio   String?
+  resume      String
+  coverLetter String?
+  status      String   @default("new") // new, reviewing, interviewed, rejected, hired
+  createdAt   DateTime @default(now())
+}
+
+model Order {
+  id              String   @id @default(cuid())
+  orderNumber     String   @unique
+  customerName    String
+  customerEmail   String
+  customerPhone   String?
+  customerAddress String?
+  customerCity    String?
+  customerCountry String?
+  customerZip     String?
+  
+  product         String   // Product name (e.g., "ADAS X1", "Drone Pro")
+  plan            String   // Plan type (base, pro, enterprise)
+  planPrice       Float
+  batteries       Int      @default(0)
+  batteryPrice    Float    @default(0)
+  care            Boolean  @default(false)
+  carePrice       Float    @default(0)
+  totalAmount     Float
+  
+  paymentMethod   String   // stripe, paypal, etc.
+  paymentStatus   String   @default("pending") // pending, completed, failed, refunded
+  paymentId       String?  // Stripe/PayPal transaction ID
+  
+  status          String   @default("pending") // pending, processing, shipped, delivered, cancelled
+  trackingNumber  String?
+  notes           String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model PreOrder {
+  id              String   @id @default(cuid())
+  customerName    String
+  customerEmail   String
+  customerPhone   String?
+  product         String
+  plan            String
+  estimatedPrice  Float
+  quantity        Int      @default(1)
+  status          String   @default("pending") // pending, contacted, converted, cancelled
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
