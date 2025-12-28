@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(
+export const GET = async (
 	_request: NextRequest,
-	{ params }: { params: { orderId: string } }
-) {
+	context: { params: { orderId: string } | Promise<{ orderId: string }> }
+) => {
 	try {
-		const { orderId } = params;
+		// Next 16 may provide params as a Promise — await to support both shapes
+		const paramsObj = (await context.params) as { orderId: string } | undefined;
+		const orderId = paramsObj?.orderId;
+
 		if (!orderId) {
 			return NextResponse.json({ error: "orderId parameter is required" }, { status: 400 });
 		}
@@ -22,4 +25,4 @@ export async function GET(
 	} catch (err) {
 		return NextResponse.json({ error: (err as Error)?.message || String(err) }, { status: 500 });
 	}
-}
+};
