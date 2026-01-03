@@ -1,144 +1,240 @@
-# ADAS Landing (my-app)
+# ADAS Landing - Next.js Application
 
-This repository contains the ADAS landing Next.js application (App Router, TypeScript). It includes UI, API routes, Prisma schema, Stripe integration, GA4, and Tailwind CSS v4 inline theme configuration.
+![ADAS Logo](https://img.shields.io/badge/ADAS-Autonomous%20Drone%20AI%20System-blue)
+![Next.js](https://img.shields.io/badge/Next.js-16.1.0-black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-**Quick summary**
-- Framework: Next.js 16 (App Router)
-- Language: TypeScript
-- Styling: Tailwind CSS v4 (inline `@theme` in `app/globals.css`)
-- Database: Prisma (SQLite for local dev, Postgres recommended for production)
+## 🚀 Overview
+
+ADAS Landing is a comprehensive Next.js application for the Autonomous Drone AI System platform. It features a modern landing page, product showcases, SaaS subscription management, drone configurator, investor relations pages, and full e-commerce capabilities.
+
+### ✨ Key Features
+
+- **🎨 Modern UI/UX**: Glass-morphism design, gradient accents, smooth animations with Framer Motion
+- **🛒 E-commerce**: Hardware ordering (drone configurator) + SaaS subscription management
+- **💳 Payment Processing**: Stripe integration for payments and subscriptions
+- **📊 Analytics**: Google Analytics 4 integration
+- **🔐 Authentication**: NextAuth.js for secure user authentication
+- **📝 CMS**: Admin dashboard for content management (blog posts, pages, orders)
+- **📱 Responsive**: Fully responsive design for all device sizes
+- **🎯 SEO Optimized**: Meta tags, Open Graph, structured data
+- **🗃️ Database**: Prisma ORM with SQLite (dev) / PostgreSQL (production)
 
 ---
 
-## Prerequisites
-- Node.js 18+ (20 recommended)
-- npm (or yarn)
-- Git
+## 📋 Table of Contents
 
-## Install
-Run from the `my-app` folder:
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Environment Variables](#environment-variables)
+- [Database Setup](#database-setup)
+- [Development](#development)
+- [Production Build](#production-build)
+- [Project Structure](#project-structure)
+- [Key Pages](#key-pages)
+- [API Routes](#api-routes)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
 
+---
+
+## 🔧 Prerequisites
+
+- **Node.js**: v18.0.0 or higher (v20.x recommended)
+- **npm**: v9.0.0 or higher (or yarn/pnpm)
+- **Git**: For version control
+- **Database**: SQLite (dev) or PostgreSQL (production)
+
+---
+
+## 📦 Installation
+
+1. **Clone the repository**
 ```bash
-cd my-app
+git clone https://github.com/dark-developer-lord/adas-landing.git
+cd adas-landing/my-app
+```
+
+2. **Install dependencies**
+```bash
 npm install
 ```
 
-## Environment variables
-Create a `.env.local` at the project root (do NOT commit secrets). Example keys used by the app:
-
-- `DATABASE_URL` — Prisma connection (sqlite: `file:./prisma/dev.db` for local)
-- `NEXTAUTH_URL` — e.g. `http://localhost:3000`
-- `NEXTAUTH_SECRET` — secret for NextAuth
-- `STRIPE_SECRET_KEY` — Stripe secret key
-- `STRIPE_WEBHOOK_SECRET` — Stripe webhook signing secret
-- `RESEND_API_KEY` — Resend email API key
-- `SENTRY_DSN` — Sentry DSN (optional)
-- `GA_MEASUREMENT_ID` / `NEXT_PUBLIC_GA_MEASUREMENT_ID` — GA4 measurement ID (optional)
-
-There is an `.env.local.example` included to guide required values.
-
-## Database (Prisma)
-Local dev uses SQLite by default. To create/update schema and generate client:
-
+3. **Set up environment variables**
 ```bash
-npx prisma migrate dev --name init  # creates migrations and dev DB
-npx prisma db push                 # apply schema without migration (alternative)
-npx prisma generate                # regenerate Prisma client
+cp .env.local.example .env.local
+# Edit .env.local with your actual values
 ```
 
-If you use a production DB (Postgres), set `DATABASE_URL` accordingly and run migrations with `prisma migrate deploy`.
+4. **Initialize database**
+```bash
+npx prisma generate
+npx prisma db push
+npm run seed  # Optional: seed with sample data
+```
 
-NOTE: local DB files (e.g. `prisma/dev.db`) are ignored from commits in `.gitignore`.
-
-## Development
-Start the dev server (Turbopack):
-
+5. **Run development server**
 ```bash
 npm run dev
-# open http://localhost:3000
 ```
 
-If styles look like plain HTML (unstyled) in the browser:
-- Hard-refresh the page (Cmd+Shift+R or Cmd+Option+R in Safari)
-- Clear browser cache or open in a private window
-- Ensure the Next dev server is running so PostCSS/Tailwind can rebuild
-
-## Build & Production
-To build and run in production mode:
-
-```bash
-npm run build
-npm start
-```
-
-Deploy to Vercel or your preferred platform. Ensure environment variables are set on the host.
-
-## Tailwind CSS v4 (inline theme)
-This project uses Tailwind v4 with inline theme configuration inside `app/globals.css` using `@theme inline { ... }`. There is no required `tailwind.config.js` file — theme tokens live in the CSS. If your editor or linter flags unknown at-rules (`@theme`, `@custom-variant`) those are valid for Tailwind v4 and can be ignored or configured to your linter.
-
-Styles live in:
-
-- `app/globals.css` — main Tailwind imports and theme
-
-## Common tasks
-- Lint: `npm run lint`
-- Format: use your formatter (Prettier) configured in the repo
-- Prisma introspect/generate: `npx prisma generate`
-
-## Security & Git
-- Do NOT commit `.env` files or other secrets. `.gitignore` already includes `.env*` and local DB files.
-- If you accidentally committed secrets, rotate them immediately and consider rewriting history.
-
-## Troubleshooting
-- Dev server not running: ensure no other process uses port 3000 and that you ran `npm install`.
-- Tailwind not rebuilding: restart the dev server and clear `.next` cache (`rm -rf .next`).
-- Type errors: run `npm run dev` to see TypeScript diagnostics; edit the offending files.
-
-## Optional: PDF invoices
-The repo includes an API route for invoices. It currently returns JSON for local testing. If you need downloadable PDF invoices, enable the React-PDF code in `lib/pdf-invoice.tsx` and return a streamed PDF response from the invoice route.
+Visit [http://localhost:3000](http://localhost:3000) to see the application.
 
 ---
 
-If you want, I can also:
-- Add a `CONTRIBUTING.md` with commit conventions
-- Create a `release/v1.0.0` tag/branch for deploy
-- Remove the local DB from the repository history (destructive rewrite)
+## 🔐 Environment Variables
 
-If you want this README committed, I will add and commit it now.
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Create a `.env.local` file in the root directory. See `.env.local.example` for all required variables.
 
-## Getting Started
+### Required Variables
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```env
+DATABASE_URL="file:./prisma/dev.db"
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-secret-key"
+STRIPE_SECRET_KEY="sk_test_..."
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🗄️ Database Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Development (SQLite)
 
-## Learn More
+```bash
+npx prisma generate
+npx prisma db push
+npx prisma studio  # Open database GUI
+npm run seed       # Seed with sample data
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Production (PostgreSQL)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Update `DATABASE_URL` to PostgreSQL connection string
+2. Run migrations: `npx prisma migrate deploy`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🛠️ Development
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run dev     # Start dev server
+npm run build   # Build for production
+npm start       # Start production server
+npm run lint    # Lint code
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# adas-landing
+---
+
+## 📁 Project Structure
+
+```
+my-app/
+├── app/                    # Next.js App Router
+│   ├── page.tsx           # Home page
+│   ├── about/             # About page
+│   ├── story/             # Company story (NEW)
+│   ├── investors/         # Investor relations
+│   ├── product/drone/     # Product pages
+│   │   └── order/         # Drone configurator
+│   ├── order/             # SaaS subscriptions
+│   ├── checkout/          # Checkout page
+│   ├── admin/             # Admin dashboard
+│   └── api/               # API routes
+├── components/            # React components
+│   ├── ui/               # UI components
+│   └── admin/            # Admin components
+├── lib/                  # Utilities
+├── prisma/               # Database
+└── public/               # Static files
+```
+
+---
+
+## 🌐 Key Pages
+
+### Public Pages
+- `/` - Home landing page
+- `/about` - About company
+- `/story` - Company origin story (NEW)
+- `/investors` - Investor pitch
+- `/product/drone` - Drone showcase
+- `/product/drone/order` - Drone configurator
+- `/order` - SaaS subscriptions
+- `/pricing` - Pricing page
+- `/blog` - Blog listing
+- `/careers` - Job listings
+
+### Protected Pages
+- `/admin` - Admin dashboard (admin only)
+- `/portal` - Customer portal (auth required)
+
+---
+
+## 🔌 API Routes
+
+- `POST /api/orders` - Create order
+- `POST /api/subscriptions/create` - Create subscription
+- `POST /api/webhooks/stripe` - Stripe webhook
+- `POST /api/contact` - Contact form
+- Admin APIs under `/api/admin/*`
+
+---
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+
+1. Push to GitHub
+2. Import project to Vercel
+3. Set environment variables
+4. Deploy
+
+### Database
+- Use Vercel Postgres, Supabase, or Neon
+- Update `DATABASE_URL`
+- Run migrations: `npx prisma migrate deploy`
+
+---
+
+## 🎨 Tech Stack
+
+- Next.js 16.1.0 (App Router)
+- TypeScript 5.0
+- Tailwind CSS v4
+- shadcn/ui + Radix UI
+- Framer Motion
+- Prisma ORM
+- NextAuth.js
+- Stripe
+- Google Analytics 4
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch: `git checkout -b feature/name`
+3. Commit changes: `git commit -m 'Add feature'`
+4. Push to branch: `git push origin feature/name`
+5. Open Pull Request
+
+---
+
+## 📄 License
+
+MIT License - see LICENSE file for details
+
+---
+
+## 📞 Support
+
+- Email: support@adas.ai
+- Issues: [GitHub Issues](https://github.com/dark-developer-lord/adas-landing/issues)
+
+---
+
+Made with ❤️ by the ADAS Team

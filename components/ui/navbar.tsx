@@ -70,10 +70,21 @@ export default function Navbar() {
             </div>
           </div>
 
+          <div className="relative group">
+            <button className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
+              Buy
+            </button>
+            <div className="absolute top-full left-0 w-[220px] p-4 glass-card border rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all translate-y-2 group-hover:translate-y-0 z-50 flex flex-col gap-2.5">
+              <Link href="/product/drone/order" className="text-sm hover:text-primary font-semibold px-2 py-1.5 rounded hover:bg-primary/5 transition-colors">Order Drone →</Link>
+              <Link href="/order" className="text-sm hover:text-primary font-semibold px-2 py-1.5 rounded hover:bg-primary/5 transition-colors">SaaS Subscription →</Link>
+              <div className="h-px bg-border my-0.5" />
+              <Link href="/track" className="text-sm hover:text-primary px-2 py-1.5 rounded hover:bg-primary/5 transition-colors">Track Order</Link>
+            </div>
+          </div>
+
           <Link href="/pricing" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors hover:underline decoration-primary underline-offset-4">Pricing</Link>
           <Link href="/docs" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors hover:underline decoration-primary underline-offset-4">Docs</Link>
           <Link href="/blog" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors hover:underline decoration-primary underline-offset-4">Blog</Link>
-          <Link href="/track" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors hover:underline decoration-primary underline-offset-4">Track Order</Link>
           
           <div className="relative group">
             <button className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
